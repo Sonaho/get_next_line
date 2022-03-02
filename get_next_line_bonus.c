@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aalmela- <aalmela-@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 15:36:40 by aalmela-          #+#    #+#             */
-/*   Updated: 2022/02/15 12:09:38 by aalmela-         ###   ########.fr       */
+/*   Updated: 2022/02/15 12:27:42 by aalmela-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*get_return_line(char *buff_file)
 {
@@ -88,22 +88,22 @@ static char	*read_next_line(char *b_file, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	*buff_file;
+	static char	*buff_file[OPEN_MAX];
 	char		*ret_line;
 
 	if (fd < 0 || BUFFER_SIZE < 0 || fd > OPEN_MAX)
 		return (NULL);
-	if (!buff_file)
+	if (!buff_file[fd])
 	{
-		buff_file = (char *)malloc(sizeof(char));
-		if (!buff_file)
+		buff_file[fd] = (char *)malloc(sizeof(char));
+		if (!buff_file[fd])
 			return (NULL);
-		buff_file[0] = 0;
+		buff_file[fd][0] = 0;
 	}
-	buff_file = read_next_line(buff_file, fd);
-	if (!buff_file)
+	buff_file[fd] = read_next_line(buff_file[fd], fd);
+	if (!buff_file[fd])
 		return (NULL);
-	ret_line = get_return_line(buff_file);
-	buff_file = clear_buffer(buff_file);
+	ret_line = get_return_line(buff_file[fd]);
+	buff_file[fd] = clear_buffer(buff_file[fd]);
 	return (ret_line);
 }
